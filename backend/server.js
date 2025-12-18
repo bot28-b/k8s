@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware
 app.use(helmet());
-app.use(cors());
+app.use(cors()); // Enable All CORS Requests
 app.use(express.json());
 app.use(morgan('combined'));
 
@@ -89,7 +89,7 @@ app.get('/api/tasks/:id', (req, res) => {
 // Create new task
 app.post('/api/tasks', (req, res) => {
   const { title, priority = 'medium' } = req.body;
-  
+
   if (!title) {
     return res.status(400).json({ success: false, message: 'Title is required' });
   }
@@ -110,7 +110,7 @@ app.post('/api/tasks', (req, res) => {
 // Update task
 app.put('/api/tasks/:id', (req, res) => {
   const taskIndex = tasks.findIndex(t => t.id === parseInt(req.params.id));
-  
+
   if (taskIndex === -1) {
     return res.status(404).json({ success: false, message: 'Task not found' });
   }
@@ -128,7 +128,7 @@ app.put('/api/tasks/:id', (req, res) => {
 // Delete task
 app.delete('/api/tasks/:id', (req, res) => {
   const taskIndex = tasks.findIndex(t => t.id === parseInt(req.params.id));
-  
+
   if (taskIndex === -1) {
     return res.status(404).json({ success: false, message: 'Task not found' });
   }
@@ -141,11 +141,11 @@ app.delete('/api/tasks/:id', (req, res) => {
 app.get('/api/stress', (req, res) => {
   const duration = parseInt(req.query.duration) || 5000;
   const start = Date.now();
-  
+
   while (Date.now() - start < duration) {
     Math.sqrt(Math.random());
   }
-  
+
   res.json({
     success: true,
     message: `CPU stressed for ${duration}ms`,
