@@ -1,0 +1,34 @@
+# Service Account for the application
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: task-app-sa
+  namespace: task-manager
+  labels:
+    app: task-manager
+---
+# Role to allow reading configmaps and secrets (Principle of Least Privilege)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: task-manager
+  name: config-reader
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list"]
+---
+# Bind the Role to the ServiceAccount
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: read-config-binding
+  namespace: task-manager
+subjects:
+- kind: ServiceAccount
+  name: task-app-sa
+  namespace: task-manager
+roleRef:
+  kind: Role
+  name: config-reader
+  apiGroup: rbac.authorization.k8s.io

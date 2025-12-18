@@ -1,0 +1,26 @@
+# StorageClass for AWS EBS (simulated)
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: gp2-delayed
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp2
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+---
+# PersistentVolumeClaim for Backend Logs/Data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backend-data-pvc
+  namespace: task-manager
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  # storageClassName: gp2-delayed # Uncomment on real AWS EKS
+  # storageClassName: standard # Use 'standard' for Minikube/Docker Desktop
