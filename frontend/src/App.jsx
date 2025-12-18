@@ -5,8 +5,9 @@ import TaskForm from './components/TaskForm';
 import Header from './components/Header';
 import Stats from './components/Stats';
 
-// Get API URL from environment variable or default to localhost
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+// Get API URL from environment variable
+// Use nullish coalescing (??) to allow empty string (for relative paths in Docker/K8s)
+const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:3000';
 
 function App() {
     const [tasks, setTasks] = useState([]);
