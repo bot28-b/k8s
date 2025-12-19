@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: task-backend:latest
+        image: aws321/k8s:backend
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
@@ -120,7 +120,7 @@ spec:
     spec:
       containers:
       - name: ui
-        image: task-frontend:latest
+        image: aws321/k8s:frontend
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
