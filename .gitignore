@@ -25,5 +25,4 @@ build/
 *.log
 
 # Kubeadm Test Checks
-# Kubeadm Test Checks
-# kubeadm/
+kubeadm/
