@@ -29,7 +29,7 @@ spec:
         fsGroup: 1001
       containers:
       - name: api
-        image: task-backend:latest # Replace with your registry image
+        image: aws321/k8s:backend
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
