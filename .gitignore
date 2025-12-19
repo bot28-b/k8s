@@ -21,9 +21,9 @@ build/
 *.swo
 *~
 
-# OS
-.DS_Store
-Thumbs.db
-
 # Docker
 *.log
+
+# Kubeadm Test Checks
+# Kubeadm Test Checks
+# kubeadm/
