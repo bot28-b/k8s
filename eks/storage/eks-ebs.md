@@ -224,3 +224,25 @@ Hello from EBS Storage
 ```
 
 **Conclusion:** The test was successful. Even after the pod was completely destroyed, the data remained safe on the AWS EBS volume and was successfully recovered by the new pod.
+
+---
+
+## Phase 8: Cleanup
+
+To avoid ongoing AWS costs after the practice session, we deleted all resources.
+
+### ⚠️ Warning: PVC Deletion First
+Before deleting the cluster, it is best practice to delete the PVCs to ensure the underlying EBS volumes are detached and released properly.
+
+```bash
+kubectl delete pvc backend-pvc -n demo
+```
+
+### Cluster Deletion Command
+The following command triggers the deletion of the Control Plane, Managed Node Groups, and all associated CloudFormation stacks (IAM roles, VPC, etc.).
+
+```bash
+eksctl delete cluster --name mini-pv --region ap-south-1
+```
+
+**Status:** Successfully cleaned up all resources to prevent billing.
