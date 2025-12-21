@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: demo
+  labels:
+    app: backend
+    component: api
+spec:
+  replicas: 1 # Note: EBS (ReadWriteOnce) can only be attached to one node at a time. 
+  # If you have multiple replicas, they must be on the same node OR you need EFS.
+  selector:
+    matchLabels:
+      app: backend
+  strategy:
+    type: Recreate # Required for EBS because it cannot be attached to two nodes simultaneously during a rolling update
+  template:
+    metadata:
+      labels:
+        app: backend
+        component: api
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+      - name: api
+        image: aws321/k8s:backend
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+          name: http
+        volumeMounts:
+        - name: backend-storage
+          mountPath: /data # Path inside the container where storage will be mounted
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secrets
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+      volumes:
+      - name: backend-storage
+        persistentVolumeClaim:
+          claimName: backend-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: demo
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: http
+  type: ClusterIP
